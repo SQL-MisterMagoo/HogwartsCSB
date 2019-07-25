@@ -1,0 +1,38 @@
+﻿<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width" />
+<base href="/" />
+<link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
+<link href="css/site.css" rel="stylesheet" />
+<title>@Title</title>
+<style>
+    body::after {
+        content: "@Title";
+        position: absolute;
+        bottom: 3em;
+        right: 3em;
+    }
+    body {
+        background-color: hsla(@Hue,70%,70%,0.5);
+    }
+</style>
+@code {
+    System.Timers.Timer TitleClock;
+    string Title = $"Style Test {DateTime.Now.ToLongTimeString()}";
+    int Hue=0;
+    protected override void OnInit()
+    {
+        base.OnInit();
+        TitleClock = new System.Timers.Timer(1000);
+        TitleClock.Elapsed += ClockTask;
+        TitleClock.AutoReset = true;
+        TitleClock.Start();
+    }
+
+    void ClockTask(object sender, EventArgs e)
+    {
+        Hue = (Hue+10) % 256;
+        Title = $"Style Test {DateTime.Now.ToLongTimeString()}";
+        Invoke(StateHasChanged);
+        Console.WriteLine(Title);
+    }
+}
